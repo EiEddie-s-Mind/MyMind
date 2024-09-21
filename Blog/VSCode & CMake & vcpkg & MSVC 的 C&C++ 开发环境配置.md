@@ -17,6 +17,8 @@ datetime: 2024-09-20
 
 只需在下载的 Visual Studio Installer 中选择 **单个组件 → 编译器、生成工具和运行时 → MSVC vXXX - VS 2022 C++ x64/x86 生成工具** 选项进行安装. 建议安装最新版本.
 
+MSVC 环境必须经过初始化才可以使用. 安装完成后会自动出现 *Developer Command Prompt for VS 20xx* (即 *开发人员命令提示符* ) 和 *Developer PowerShell for VS 20xx* (即 *开发人员 PowerShell* ), 这两个终端就是已经初始化的环境, 在这两个终端中可以直接调用编译器. 另外 Visual Studio 还提供了初始化脚本来初始化编译器环境.
+
 ## vcpkg 安装
 访问 vcpkg 的 GitHub 仓库以查看安装说明.
 
@@ -154,6 +156,11 @@ cmake → ninja → cl (MSVC)
 
 ## 示例
 我们来实际编译一个简单的 OpenCV 项目来验证上述设置都是否正确.
+
+> [!Warning]
+> 必须初始化 MSVC 环境后才能调用它的编译套件.
+> 
+> 可以在开发人员 *命令提示符中* 输入 `code <path>` 命令打开 VS Code 后进行操作.
 
 ### 安装 OpenCV
 使用 vcpkg 来安装, 只需使用命令:
