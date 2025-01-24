@@ -12,11 +12,11 @@ datetime: 2025-01-25
 ```
 git submodule add <url> <path>
 ```
-可以在 `<path>` 地址处添加一个子模块. `<path>` 可以省略, 就像 `git clone` 一样.
+可以在 `<path>` 地址处添加一个子模块.
 
 其中, `url` 可以为远程仓库地址, 也可以是本地仓库地址. 例如, 要把下面的 `new_repo` 仓库添加为 `repo` 的子模块, 可以使用命令: \
-`git submodule add ./3rd/new_repo` \
-其中 `./3rd/new_repo` 即为本地仓库的 `url`. 需要注意的是本地 `url` 前面的 `./` 或 `../` 是必须的.
+`git submodule add ./3rd/new_repo 3rd/new_repo` \
+其中 `./3rd/new_repo` 即为本地仓库的 `url`. 需要注意的是本地 `url` 前面的 `./` 或 `../` 是必须的, `<path>` 也不能省略.
 
 ```
 repo
