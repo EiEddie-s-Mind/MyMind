@@ -1,3 +1,3 @@
 [submodule "Work/visual"]
 	path = Work/visual
-	url = ./Work/visual
+	url = git@github.com:EiEddie-s-Mind/visual.git
