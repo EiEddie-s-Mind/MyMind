@@ -3,6 +3,7 @@ imageNameKey: linux_to_go
 tags:
   - 折腾
   - linux
+  - undone
 datetime: 2023-09-12
 ---
 # 在移动介质中安装操作系统
