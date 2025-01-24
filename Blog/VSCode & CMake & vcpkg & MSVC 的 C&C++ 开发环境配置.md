@@ -36,7 +36,7 @@ Ninja 是一个跨平台的构建系统, 我们使用它来作为 CMake 的生�
 
 另外, 为了获得更完备的开发体验, 建议使用 **clangd** 替代 **C/C++** 作为代码静态分析和补全的后端. 但 **C/C++** 也得保留, 为了与 CMake 有关插件配合. 我们可以把 **C/C++** 的所有代码提示全部关掉, 防止与 **clangd** 冲突.
 
-**clangd** 需要配置才能识别引入的第三方库, 否则就会报 `file not found` 错误. 可以读取通过 CMake 自动生成的 `compile_commands.json` 文件来配置第三方库信息. 然而 CMake 只能为 Ninja 和 Makefile 生成此文件[^1]. 因为我们想尽可能做到跨平台, 所以使用 Ninja  是更好的选择.
+**clangd** 需要配置才能识别引入的第三方库, 否则就会报 `file not found` 错误. 可以读取通过 CMake 自动生成的 `compile_commands.json` 文件来配置第三方库信息. 然而 CMake 只能为 Ninja 和 Makefile 生成此文件[^1]. 因为我们想尽可能做到跨平台, 所以使用 Ninja 是更好的选择.
 
 在项目的根目录下放置一个 `CMakePresets.json` 可以控制 VS Code 中 CMake 的配置行为, 各种命令行参数也可以在这里面定义. 下面是一个示例文件, 定义了四个可选的项目配置预设:
 ```json
@@ -146,13 +146,11 @@ cmake → ninja → cl (MSVC)
 ```
 
 当你想要获得最终的编译成果时, 实际上会发生以下步骤:
-1. 配置 Configure  
+1. 配置 Configure \
 	这一步 `cmake` 会读取 `CMakePresets.json` 文件中的内容, 综合我们的要求解析 `CMakeLists.txt` 输出一个编译文件, 在使用 Ninja 作为生成器时输出的是 `build.ninja`, 在 `build` 文件夹中.
-
-2. 构建 Build  
+2. 构建 Build \
 	  这一步 `cmake` 会调用指定的生成器 (`ninja`), 逐条按照编译文件执行指令; 生成器会负责调用指定的编译器按指令进行编译.
-
-3. 编译与链接 Compile & Link  
+3. 编译与链接 Compile & Link \
 	  生成器 `ninja` 会调用编译器与链接器, 先将源代码文件编译成中间文件 `.obj` / `.o` , 而后与外部库进行链接, 输出最终的二进制文件. 如果有动态链接库, 也会被复制过来.
 
 另外, *配置* 时会产生 `compile_commands.json` 文件, 然后 **clangd** 才能读取进而提供静态分析和代码补全. 所以想用 **clangd** 的功能时, 必须得先 *配置* 一遍才行.
