@@ -1,3 +1,6 @@
 [submodule "Work/visual"]
 	path = Work/visual
 	url = git@github.com:EiEddie-s-Mind/visual.git
+[submodule "Work/julia"]
+	path = Work/julia
+	url = git@github.com:EiEddie-s-Mind/julia.git
