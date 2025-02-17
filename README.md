@@ -8,3 +8,4 @@
 - `Work/visual`: [机器视觉与计算机图形学相关](Work/visual/visual.md)
 - `Work/julia`: 使用 `julia` 语言编写的科学计算相关代码
 	- `ballistic`: [抛体运动弹道解算](Work/julia/ballistic.md)
+	- `series`: [运动预测](Work/julia/series.md)
