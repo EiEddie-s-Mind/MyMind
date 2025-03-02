@@ -9,3 +9,4 @@
 - `Work/julia`: 使用 `julia` 语言编写的科学计算相关代码
 	- `ballistic`: [抛体运动弹道解算](Work/julia/ballistic.md)
 	- `series`: [运动预测](Work/julia/series.md)
+	- `rotation`: [三维空间中的旋转](Work/julia/rotation.md)
