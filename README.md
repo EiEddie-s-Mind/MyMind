@@ -6,7 +6,13 @@
 
 ## 一些链接
 - `Work/visual`: [机器视觉与计算机图形学相关](Work/visual/visual.md)
+	[_\[Web\]_](https://github.com/EiEddie-s-Mind/visual/blob/master/visual.md)
 - `Work/julia`: 使用 `julia` 语言编写的科学计算相关代码
 	- `ballistic`: [抛体运动弹道解算](Work/julia/ballistic.md)
+		[_\[Web\]_](https://github.com/EiEddie-s-Mind/julia/blob/master/ballistic.md)
 	- `series`: [运动预测](Work/julia/series.md)
-	- `rotation`: [三维空间中的旋转](Work/julia/rotation.md)
+		[_\[Web\]_](https://github.com/EiEddie-s-Mind/julia/blob/master/series.md)
+	- `rotation`: [三维旋转](Work/julia/rotation.md)
+		[_\[Web\]_](https://github.com/EiEddie-s-Mind/julia/blob/master/rotation.md)
+	- `rotation`: [三维刚体运动](Work/julia/movement.md)
+		[_\[Web\]_](https://github.com/EiEddie-s-Mind/julia/blob/master/movement.md)
