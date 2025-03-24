@@ -14,5 +14,5 @@
 		[_\[Web\]_](https://github.com/EiEddie-s-Mind/julia/blob/master/series.md)
 	- `rotation`: [三维旋转](Work/julia/rotation.md)
 		[_\[Web\]_](https://github.com/EiEddie-s-Mind/julia/blob/master/rotation.md)
-	- `rotation`: [三维刚体运动](Work/julia/movement.md)
+	- `movement`: [三维刚体运动](Work/julia/movement.md)
 		[_\[Web\]_](https://github.com/EiEddie-s-Mind/julia/blob/master/movement.md)
