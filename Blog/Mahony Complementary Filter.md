@@ -202,7 +202,7 @@ $$\boxed{\begin{align}
 \dot{\hat{b}} &= - k_I \omega \\
 \text{where} \\
 \omega &= \sum_i \frac{k_i}{2} ~ \mathbf{v}_i \times \hat{\mathbf{v}}_i \\
-\hat{\mathbf{v}}_i &= \hat{R} ~ \mathbf{v}_{0i}
+\hat{\mathbf{v}}_i &= \hat{R}^T ~ \mathbf{v}_{0i}
 \end{align}}$$
 
 ## 四元数滤波运动学
@@ -212,7 +212,8 @@ $$\boxed{\begin{align}
 它表示了绕单位轴 $\hat{\mathbf{n}}$ 旋转 $\Omega$.
 
 将旋转作用在向量上这一动作用四元数表示为 $q \mathbf{v} q^*$,
-其中 $q^*$ 表示 $q$ 的共轭, 在单位四元数的情况下, 共轭与取逆等价.
+其中 $q^*$ 表示 $q$ 的共轭.
+特殊地, 旋转矩阵的转置对应于四元数的共轭, 它们都是因为这一操作在各自的约束下与取逆等价.
 注意, 这里的向量 $\mathbf{\Omega}$ 都是纯虚四元数
 $\mathbf{\Omega} = \Omega_x \mathrm{i} + \Omega_y \mathrm{j} + \Omega_z \mathrm{k}$, 下同.
 
@@ -230,7 +231,7 @@ $$\boxed{\begin{align}
 \dot{\hat{b}} &= - k_I \omega \\
 \text{where} \\
 \omega &= \sum_i \frac{k_i}{2} ~ \mathbf{v}_i \times \hat{\mathbf{v}}_i \\
-\hat{\mathbf{v}}_i &= \hat{q} ~ \mathbf{v}_{0i} ~ \hat{q}^*
+\hat{\mathbf{v}}_i &= \hat{q}^* ~ \mathbf{v}_{0i} ~ \hat{q}
 \end{align}}$$
 
 定义四元数乘法使用的 Graßmann 积也摘录在此:
