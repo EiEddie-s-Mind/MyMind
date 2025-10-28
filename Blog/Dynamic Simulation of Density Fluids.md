@@ -137,6 +137,39 @@ $$\begin{align}
 扩散过程结束后, 需要对 $\mathbf{u}^{\mathrm{d}*}$ 进行投影得到 $\mathbf{u}^{\mathrm{d}}$, 以消除速度场的散度, 保证流体不可压.
 
 ### 平流
+平流对应的方程为
+$$\frac{\partial \mathbf{u}}{\partial t} = - (\mathbf{u} \cdot \nabla) \mathbf{u}$$
+
+求解这一方程可以使用朴素的欧拉法, 即计算每个微小时间段内的演进, 但是这一方法在速度较大或时间步长过长时数值不稳定.
+为了解决这一问题, 我们使用 **半 Lagrangian 法** 来求解方程.
+
+半 Lagrangian 法基于这样一个事实: \
+对于依赖位置与时间的连续函数 $\phi(\mathbf{r}, t)$, 当 $\frac{\partial \phi}{\partial t} = (\mathbf{v} \cdot \nabla) \phi$, 则始终有 $\phi(\mathbf{r} + \mathrm{d}\mathbf{r}, t) = \phi(\mathbf{r}, t + \mathrm{d}t)$, 其中 $\mathrm{d}\mathbf{r} = \mathbf{v} \mathrm{d}t$. \
+下面我们证明这一定理. \
+$$\phi(\mathbf{r}, t + \mathrm{d}t) = \phi(\mathbf{r}, t) + \frac{\partial}{\partial t} \phi \; \mathrm{d}t$$
+$$\begin{align}
+\phi(\mathbf{r} + \mathrm{d}\mathbf{r}, t) &= \phi(\mathbf{r}, t) + \frac{\partial}{\partial \mathbf{r}} \phi \cdot \mathrm{d}\mathbf{r} \\
+  &=  \phi(\mathbf{r}, t) + \frac{\partial}{\partial \mathbf{r}} \phi \cdot \mathbf{v} \mathrm{d}t \\
+  &=  \phi(\mathbf{r}, t) + \mathbf{v} \cdot \frac{\partial}{\partial \mathbf{r}} \phi \; \mathrm{d}t \\
+  &=  \phi(\mathbf{r}, t) + (\mathbf{v} \cdot \nabla) \phi \; \mathrm{d}t
+\end{align}$$
+于是 $\phi(\mathbf{r} + \mathrm{d}\mathbf{r}, t) = \phi(\mathbf{r}, t + \mathrm{d}t)$.
+
+将这一定理应用到 $\mathbf{u}$ 的两个分量上, 并令 $\mathbf{v} := -\mathbf{u}$, 可以得到
+$$\mathbf{u}^{\mathrm{v}*} = \mathbf{u}(\mathbf{r}, t + \mathrm{d}t) = \mathbf{u}(\mathbf{r} - \mathbf{u} \mathrm{d}t, t)$$
+于是求 $\mathrm{d}t$ 时间之后的速度场等价于将每个点向后平移 $\mathbf{u}\mathrm{d}t$ 得到的速度场.
+这样取得的结果面对较长时间步长时仍然具有较好的数值稳定性.
+
+需要注意的是, 格点 $\mathbf{r}$ 总是处于有序的整数位置, 因此总是可以准确获知其对应的速度, 因为速度被存在相应位置的变量中.
+但对格点 $\mathbf{r}$ 计算 $\mathbf{r}' := \mathbf{r} - \mathbf{u} \mathrm{d}t$ 得到的值却总是不会出现在整数位置处, 因此如何获取其速度是我们面对的挑战.
+一个简单的方法是对包围 $\mathbf{r}'$ 的四点所对应的速度进行插值, 以此结果作为该点的速度.
+所使用的插值方法可以是*双线性插值*或其他.
+这一方法的重大弊端是取得的速度并非精确值, 它总是具有较大的误差, 这是由于插值而引入的.
+当我们将平流方法应用在要求严格守恒 (物质的量守恒或质量守恒) 的组分上时, 这一组分的守恒要求便被破坏, 只能通过其他方法来弥补.
+
+同上,
+平流前需要设置合适的边界条件;
+平流后需要对 $\mathbf{u}^{*} = \mathbf{u}^{\mathrm{v}*}$ 进行投影得到 $\mathbf{u}$, 以消除速度场的散度, 保证流体不可压.
 
 ### 投影
 
