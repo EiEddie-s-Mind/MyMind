@@ -58,7 +58,7 @@ $$\frac{\partial \mathbf{u}}{\partial t} = -\nabla \frac{p}{\rho} - (\mathbf{u} 
 每一步都必须在设定的边界条件下进行; 并且都要进行**投影** (**project**), 以保证流体不可压缩.
 
 我们之所以这样做, 是因为以下两点. \
-第一, 方程中 $-\nabla \frac{p}{\rho}$ 项的作用是保证流体的不可压缩性, 即 $\nabla \cdot \mathbf{u} = 0$. <!-- TODO: 需要数学证明 --> \
+第一, 方程中 $-\nabla \frac{p}{\rho}$ 项的作用是保证流体的不可压缩性, 即 $\nabla \cdot \mathbf{u} = 0$. 此处的进一步论述可以查看后文[[#投影]]一节. \
 第二, 方程可以被拆分为以下形式:
 $$\mathbf{u}^*(t+\mathrm{d}t) = \mathbf{u}(t) + \mathbf{a} \; \mathrm{d}t + \nu \nabla^2 \mathbf{u} \; \mathrm{d}t - (\mathbf{u} \cdot \nabla) \mathbf{u} \; \mathrm{d}t$$
 上式中 $\mathbf{u}(t)$ 是 $t$ 时刻的速度;
@@ -115,7 +115,7 @@ $$\begin{align}
 我们将四个邻点之和记作 $\sum_\mathrm{nbr} \mathbf{u} := \mathbf{u}(x+\Delta x) + \mathbf{u}(x-\Delta x) + \mathbf{u}(y+\Delta y) + \mathbf{u}(y-\Delta y)$.
 
 将我们上面求得的 Laplace 算子代入方程, 得到
-$$\mathbf{u}^{\mathrm{d}*}(t+\Delta t) - \mathbf{u}(t) = \nu \Delta t \; \nabla^2 \mathrm{u}(\tau)$$
+$$\mathbf{u}^{\mathrm{d}*}(t+\Delta t) - \mathbf{u}(t) = \nu \Delta t \; \nabla^2 \mathbf{u}(\tau)$$
 其中 $\tau \in [t, t+\Delta t]$.
 选择更靠后的时间更有利于保证系统保持最新, 若选择 $\tau = t+\Delta t$ 则有
 $$\mathbf{u}^{\mathrm{d}*} - \mathbf{u} = \nu \Delta t \; \nabla^2 \mathbf{u}^{\mathrm{d}*}$$
@@ -172,6 +172,25 @@ $$\mathbf{u}^{\mathrm{v}*} = \mathbf{u}(\mathbf{r}, t + \mathrm{d}t) = \mathbf{u
 平流后需要对 $\mathbf{u}^{*} = \mathbf{u}^{\mathrm{v}*}$ 进行投影得到 $\mathbf{u}$, 以消除速度场的散度, 保证流体不可压.
 
 ### 投影
+对纳维-斯托克斯方程两侧求散度, 可得
+$$\frac{\partial}{\partial t} \nabla \cdot \mathbf{u} = -\nabla^2 \frac{p}{\rho} - \nabla \cdot ((\mathbf{u} \cdot \nabla) \mathbf{u}) + \nu \nabla^2 (\nabla \cdot \mathbf{u}) + \nabla \cdot \mathbf{a}$$
+我们的目标为使 $\nabla \cdot \mathbf{u} = 0$, 代入上式得
+$$0 = -\rho^{-1} \nabla^2 p - \nabla \cdot ((\mathbf{u} \cdot \nabla) \mathbf{u}) + \nabla \cdot \mathbf{a}$$
+由*亥姆霍兹分解定理*, $\mathbf{a} = \nabla \phi + \nabla \times \mathbf{A}$, 代入后因为 $\nabla \cdot \nabla \times \mathbf{A} = 0$, 将前一项并入 $p$ 中, 得
+$$\nabla^2 p = -\rho \nabla \cdot ((\mathbf{u} \cdot \nabla) \mathbf{u}) + \rho \nabla^2 \phi$$
+于是得到了关于压强的泊松方程. 这一压强的结果是使方程速度无散的必要条件.
+可以证明当边界条件与初值条件合适时, 这也是充分条件.
+
+在具体实践中, 我们希望将一个具有散度的场 $\mathbf{u}^*$ 转为无散场 $\mathbf{u}$.
+使用*亥姆霍兹分解定理*, 将 $\mathbf{u}^*$ 分解为标量势 $\phi$ 与矢量势 $\mathbf{A}$: $\mathbf{u}^* = \nabla \phi + \nabla \times \mathbf{A}$, 此时两侧取散度得
+$$\begin{align}
+\nabla \cdot \mathbf{u}^* &= \nabla^2 \phi + \nabla \cdot \nabla \times \mathbf{A} \\
+  &= \nabla^2 \phi
+\end{align}$$
+因此投影的重点是找到原场 $\mathbf{u}^*$ 的标势, 将其梯度从原场中剔除, 只留下矢势的旋度场 $\mathbf{u} = \nabla \times \mathbf{A} = \mathbf{u}^* - \nabla \phi$.
+这时 $\mathbf{u}$ 是无散的.
+标势 $\phi$ 可通过求解泊松方程取得
+$$\nabla^2 \phi = \nabla \cdot \mathbf{u}^*$$
 
 ## 标量场
 
