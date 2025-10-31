@@ -192,7 +192,26 @@ $$\begin{align}
 标势 $\phi$ 可通过求解泊松方程取得
 $$\nabla^2 \phi = \nabla \cdot \mathbf{u}^*$$
 
+<!-- Gauss-Seidel 迭代 -->
+
 ## 标量场
+一个与速度场耦合的标量场主要用于产生我们要的视觉效果, 如温度或物质浓度等.
+此量随速度场迁移, 并在一定程度上改变速度分布.
+以温度场为例简要说明以上两点.
+
+标量场的方程与一般情况下描述此量的偏微分方程极为相似, 例如无源的热传导方程
+$$\frac{\partial T}{\partial t} = \kappa \nabla^2 T$$
+这同时也是描述物质扩散的微分方程.
+在具有外部的速度场时, 只需将欧拉导数替换为物质导数即可
+$$\begin{align}
+ & \frac{\mathrm{D} T}{\mathrm{D} t} = \kappa \nabla^2 T \\
+=& (\mathbf{u} \cdot \nabla) T + \frac{\partial T}{\partial t} &
+\end{align}$$
+
+求解这一方程的过程与我们上面介绍的方法完全一致.
+对于其他参量, 若能写出微分方程, 也可按照上述方式改写为与速度场耦合的形式并求解.
+
+<!-- 温度导致密度变化, 进而影响速度 -->
 
 
 [^1]: J. Stam, "Real-Time Fluid Dynamics for Games", *Proceedings of the Game Developers Conference*, Mar 2003
