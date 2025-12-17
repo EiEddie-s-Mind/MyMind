@@ -7,7 +7,7 @@ datetime: 2025-12-15
 # 量子力学中的角动量
 在量子力学中, 除了我们能够想象的沿轨道运动和绕自转轴转动的公转角动量与自转角动量, 这两者分别称为轨道角动量与自旋角动量, 对于任意 $\mathbf{J}$, 只要其分量 $J_\alpha$ 满足
 $$ [J_\alpha, J_\beta] = \mathrm{i} \hbar \, \varepsilon_{\alpha \beta \gamma} \, J_\gamma $$
-则我们称它为一种角动量.
+则我们称它为一种**角动量**.
 角动量都具有以下对易关系
 $$[\mathbf{J}^2, J_\alpha] = 0$$
 这说明角动量的值与某一个角动量分量可以被同时测得, 一般我们选择 $z$ 轴分量 $J_z$.
@@ -96,6 +96,61 @@ $m$ 的取值为 $\underline{m} \le m \le \overline{m}$, 从最低态 $\ket{\lam
 $$\mathbf{J}^2 \ket{l, m} = l (l+1) \hbar^2 \ket{l, m}$$
 其中 $l$ 的取值为 $l > 0$, 且 $l$ 可以是半奇数或整数.
 对于给定的 $l$, 允许的 $m$ 值为 $-l, -l + 1, \cdots, l - 1, l$, 共 $2l + 1$ 个.
+
+## 算符的矩阵元
+下面来求各种角动量算符的矩阵元.
+
+已知 $l$, $m$ 不同的态矢是正交的, $\ket{l, m}$ 是归一化的.
+于是 $\mathbf{J}^2$ 和 $J_z$ 的矩阵元为
+$$\bra{l', m'} \mathbf{J}^2 \ket{l, m} = l (l+1) \hbar^2 \delta_{l l'} \delta_{m m'}$$
+$$\bra{l', m'} J_z \ket{l, m} = m \hbar \, \delta_{l l'} \delta_{m m'}$$
+
+$J_\pm$ 作用在基矢上的表达式我们已经得到, 从这一点可以推导出 $J_\pm$ 的矩阵元为
+$$\begin{align}
+\bra{l', m'} J_\pm \ket{l, m} &= \sqrt{\lambda - m (m \pm 1)} \hbar \braket{l', m' | l, m \pm 1} \\
+  &= \sqrt{l (l+1) - m (m \pm 1)} \hbar \, \delta_{l l'} \delta_{m \pm 1, m'} \\
+  &= \sqrt{(l \mp m) (l \pm m + 1)} \hbar \, \delta_{l l'} \delta_{m \pm 1, m'}
+\end{align}$$
+
+从 $J_\pm = J_x \pm \mathrm{i} J_y$ 可以得出 $J_x = \frac{1}{2} (J_+ + J_-)$, $J_y = \frac{1}{2 \mathrm{i}} (J_+ - J_-)$. 由此可得
+$$\bra{l', m'} J_x \ket{l, m} = \frac{\hbar}{2} (\sqrt{(l - m) (l + m + 1)} \, \delta_{l l'} \delta_{m + 1, m'} + \sqrt{(l + m) (l - m + 1)} \, \delta_{l l'} \delta_{m - 1, m'})$$
+$$\bra{l', m'} J_y \ket{l, m} = \frac{\hbar}{2 \mathrm{i}} (\sqrt{(l - m) (l + m + 1)} \, \delta_{l l'} \delta_{m + 1, m'} - \sqrt{(l + m) (l - m + 1)} \, \delta_{l l'} \delta_{m - 1, m'})$$
+非零的矩阵元可以写作
+$$\bra{l, m+1} J_x \ket{l, m} = \frac{\hbar}{2} \sqrt{(l - m) (l + m + 1)}$$
+$$\bra{l, m-1} J_x \ket{l, m} = \frac{\hbar}{2} \sqrt{(l + m) (l - m + 1)}$$
+$$\bra{l, m+1} J_y \ket{l, m} = \frac{\hbar}{2 \mathrm{i}} \sqrt{(l - m) (l + m + 1)}$$
+$$\bra{l, m-1} J_y \ket{l, m} = -\frac{\hbar}{2 \mathrm{i}} \sqrt{(l + m) (l - m + 1)}$$
+
+下面是一段计算不同角动量算符矩阵形式的代码, 使用 *Mathematica* 编写.
+```mathematica
+(*\mathbf{J}^2*)
+JJ[l_] := Table[l (l + 1) \[HBar] DiscreteDelta[m-m\[Prime]], {m\[Prime], l, -l, -1}, {m, l, -l, -1}]
+
+(*J_z*)
+Jz[l_] := Table[m \[HBar] DiscreteDelta[m-m\[Prime]], {m\[Prime], l, -l, -1}, {m, l, -l, -1}]
+
+(*J_x*)
+Jx[l_] := \[HBar]/2 Table[Sqrt[(l - m) (l + m + 1)] DiscreteDelta[m+1-m\[Prime]] + Sqrt[(l + m) (l - m + 1)] DiscreteDelta[m-1-m\[Prime]], {m\[Prime], l, -l, -1}, {m, l, -l, -1}]
+
+(*J_y*)
+Jy[l_] := \[HBar]/(2 I) Table[Sqrt[(l - m) (l + m + 1)] DiscreteDelta[m+1-m\[Prime]] - Sqrt[(l + m) (l - m + 1)] DiscreteDelta[m-1-m\[Prime]], {m\[Prime], l, -l, -1}, {m, l, -l, -1}]
+```
+
+我们计算 $l=\frac{1}{2}$ 时的 $J_x$, $J_y$, $J_z$ 矩阵作为例子.
+结果为 $J_\alpha = \frac{\hbar}{2} \sigma_\alpha$, $\alpha = x, y, z$
+$$\sigma_x = \begin{pmatrix}
+  & 1 \\
+1 &   \\
+\end{pmatrix}$$
+$$\sigma_y = \begin{pmatrix}
+           & -\mathrm{i} \\
+\mathrm{i} &             \\
+\end{pmatrix}$$
+$$\sigma_z = \begin{pmatrix}
+1 &    \\
+  & -1 \\
+\end{pmatrix}$$
+这就是著名的**泡利自旋矩阵**.
 
 ## 轨道角动量
 我们所熟知的经典力学中的角动量 $\mathbf{L} = \mathbf{r} \times \mathbf{p}$ 也有相应的量子对应, 只需将动量 $\mathbf{p}$ 改写为算符形式
@@ -186,7 +241,7 @@ $$\begin{align}
 我们将先略去系数, 只讨论函数形式的变化; 得到表达式后补上系数使其归一化.
 现在我们将从 $\braket{\hat{\mathbf{n}} | l, l}$ 态降低 $n := l - m$ 次到达 $\braket{\hat{\mathbf{n}} | l, m}$, 即
 $$\begin{align}
-\braket{\hat{\mathbf{n}} | l, m} &\sim (\mathrm{e}^{- \mathrm{i} \phi} (-\partial_\theta + \mathrm{i} \cot{\theta} \, \partial_\phi))^n \braket{\hat{\mathbf{n}} | l, m} \\
+\braket{\hat{\mathbf{n}} | l, m} &\sim (\mathrm{e}^{- \mathrm{i} \phi} (-\partial_\theta + \mathrm{i} \cot{\theta} \, \partial_\phi))^n \braket{\hat{\mathbf{n}} | l, l} \\
   & \sim (\mathrm{e}^{- \mathrm{i} \phi} (-\partial_\theta + \mathrm{i} \cot{\theta} \, \partial_\phi))^n \, \mathrm{e}^{\mathrm{i} l \phi} \sin^l{\theta} \\
   &= (\mathrm{e}^{- \mathrm{i} \phi} (-\partial_\theta + \mathrm{i} \cot{\theta} \, \partial_\phi))^{n-1} ~ (\mathrm{e}^{- \mathrm{i} \phi} (-\partial_\theta + \mathrm{i} \cot{\theta} \, \partial_\phi)) ~ \mathrm{e}^{\mathrm{i} l \phi} \sin^l{\theta} \\
   &= (\mathrm{e}^{- \mathrm{i} \phi} (-\partial_\theta + \mathrm{i} \cot{\theta} \, \partial_\phi))^{n-1} ~ \mathrm{e}^{\mathrm{i} (l-1) \phi} ~ (-\partial_\theta - l \cot{\theta}) ~ \sin^l{\theta} \\
@@ -233,3 +288,7 @@ Y_{l m} &= \braket{\hat{\mathbf{n}} | l, m} \\
   &= \frac{(-1)^l}{2^l \, l!} \sqrt{\frac{(2l+1) (l+m)!}{4 \pi (l-m)!}}  ~  \mathrm{e}^{\mathrm{i} m \phi} ~ \frac{1}{\sin^m{\theta}} \frac{\mathrm{d}^{l-m}}{\mathrm{d} (\cos{\theta})^{l-m}} \sin^{2l}{\theta}
 \end{align}$$
 可以认出这就是我们所熟知的球谐函数.
+它是球面上正交归一的一族基函数, 这一性质可以从我们对态矢的讨论中得知:
+- 态矢是归一化的, 对应了球谐函数的归一性;
+- 态矢是厄米算符对应不同本征值的本征态, 根据厄米算符的性质, 这些本征态是正交的, 对应了球谐函数的正交性;
+- 这一组态矢是 $\mathbf{J}^2$ 与 $J_z$ 的共同本征态, 因此它们能够作为角动量空间的一组基.
