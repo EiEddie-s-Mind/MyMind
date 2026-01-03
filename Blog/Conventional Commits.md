@@ -2,6 +2,8 @@
 tags:
   - git
 datetime: 2025-01-26
+title: 约定式提交
+aliases: [约定式提交]
 ---
 
 # 约定式提交

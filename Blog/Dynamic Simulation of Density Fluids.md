@@ -4,6 +4,8 @@ tags:
   - 物理
   - 计算机图形学
 datetime: 2025-10-26
+title: 密度流体的动态模拟
+aliases: [密度流体的动态模拟]
 ---
 
 # 密度流体的动态模拟
@@ -17,7 +19,7 @@ datetime: 2025-10-26
 这是指标量会被流体输运, 例如温度的对流;
 标量场同时可以反过来影响速度场, 例如渗透压导致的流体运动, 但我们一般不认为它会破坏流体的不可压缩性, 否则这将导致被求解方程的形式变得极端复杂.
 
-写出不可压缩流体的*纳维-斯托克斯方程*:
+写出不可压缩流体的*纳维 - 斯托克斯方程*:
 $$\nabla \cdot \mathbf{u} = 0$$
 $$\frac{\mathrm{D} \mathbf{u}}{\mathrm{D} t} = -\nabla \frac{p}{\rho} + \nu \nabla^2 \mathbf{u} + \mathbf{a}$$
 前者是质量守恒定律对应的连续性方程在不可压缩, 即 $\rho \equiv \mathrm{const}$ 时的推论;
@@ -57,7 +59,7 @@ $$\frac{\partial \mathbf{u}}{\partial t} = -\nabla \frac{p}{\rho} - (\mathbf{u} 
 每一步都必须在设定的边界条件下进行; 并且都要进行**投影** (**project**), 以保证流体不可压缩.
 
 我们之所以这样做, 是因为以下两点. \
-第一, 方程中 $-\nabla \frac{p}{\rho}$ 项的作用是保证流体的不可压缩性, 即 $\nabla \cdot \mathbf{u} = 0$. 此处的进一步论述可以查看后文[[#投影]]一节. \
+第一, 方程中 $-\nabla \frac{p}{\rho}$ 项的作用是保证流体的不可压缩性, 即 $\nabla \cdot \mathbf{u} = 0$. 此处的进一步论述可以查看后文 [[#投影]] 一节. \
 第二, 方程可以被拆分为以下形式:
 $$\mathbf{u}^*(t+\mathrm{d}t) = \mathbf{u}(t) + \mathbf{a} \; \mathrm{d}t + \nu \nabla^2 \mathbf{u} \; \mathrm{d}t - (\mathbf{u} \cdot \nabla) \mathbf{u} \; \mathrm{d}t$$
 上式中 $\mathbf{u}(t)$ 是 $t$ 时刻的速度;

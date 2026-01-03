@@ -3,6 +3,8 @@ tags:
   - 数学
   - 控制
 datetime: 2025-06-30
+title: Mahony 非线性互补滤波器
+aliases: [Mahony 非线性互补滤波器]
 ---
 
 # Mahony 非线性互补滤波器

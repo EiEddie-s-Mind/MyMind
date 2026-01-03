@@ -2,6 +2,8 @@
 tags:
   - git
 datetime: 2025-01-25
+title: "`git` 子模块"
+aliases: ["`git` 子模块"]
 ---
 
 # `git` 子模块

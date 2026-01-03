@@ -2,6 +2,7 @@
 tags:
   - git
 datetime: 2025-01-22
+title: Git Tips
 ---
 
 # Git Tips
@@ -120,7 +121,7 @@ git rebase -i <commit>
 	```
 	git reset --hard <commit>
 	```
-	例如, 撤销最后一次提交^[使用了[祖先引用](https://git-scm.com/book/zh/v2/Git-工具-选择修订版本.html#_祖先引用)]:
+	例如, 撤销最后一次提交^[使用了 [祖先引用](https://git-scm.com/book/zh/v2/Git-工具-选择修订版本.html#_祖先引用)]:
 	```
 	git reset --hard HEAD^
 	```

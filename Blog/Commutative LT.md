@@ -3,7 +3,10 @@ tags:
   - 数学
   - 小品
   - undone
+  - todo
 datetime: 2025-11-01
+title: 可交换的线性变换
+aliases: [可交换的线性变换]
 ---
 
 # 可交换的线性变换

@@ -4,6 +4,8 @@ tags:
   - undone
   - todo
 datetime: 2025-12-05
+title: 若尔当标准型
+aliases: [若尔当标准型]
 ---
 
 # 若尔当标准型

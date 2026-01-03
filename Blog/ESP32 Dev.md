@@ -4,6 +4,8 @@ tags:
   - 编程
   - 开发环境
 datetime: 2025-07-05
+title: "ESP32: 环境配置与开发"
+aliases: ["ESP32: 环境配置与开发"]
 ---
 
 # ESP32: 环境配置与开发
@@ -11,7 +13,7 @@ datetime: 2025-07-05
 
 本篇文章的开发环境选择是 **Visual Studio Code** 与 **esp idf**.
 以 [**微雪电子 ESP32-S3-Nano** 开发板](https://www.waveshare.net/wiki/ESP32-S3-Nano) 为例; 这款开发板理论上与 **Arduino Nano esp32** 开发板完全兼容.
-在[这里](https://docs.arduino.cc/resources/pinouts/ABX00083-full-pinout.pdf)可以找到 Arduino 开发板的引脚定义.
+在 [这里](https://docs.arduino.cc/resources/pinouts/ABX00083-full-pinout.pdf) 可以找到 Arduino 开发板的引脚定义.
 
 ## esp idf 安装与配置
 esp idf 有两种安装途径: 通过官方安装器; 或是通过 VSCode 插件安装.
@@ -21,7 +23,7 @@ esp idf 有两种安装途径: 通过官方安装器; 或是通过 VSCode 插件
 
 鉴于我们将在 VSCode 中进行开发, 所以最好选择第二种: 通过插件安装.
 
-具体的安装过程可以在[官方教程](https://docs.espressif.com/projects/vscode-esp-idf-extension/zh_CN/latest/installation.html)找到.
+具体的安装过程可以在 [官方教程](https://docs.espressif.com/projects/vscode-esp-idf-extension/zh_CN/latest/installation.html) 找到.
 
 ## 安装 USB 设备驱动
 安装 [Zadig](https://zadig.akeo.ie). 启动它, 选择 *Options > List All Devices*.

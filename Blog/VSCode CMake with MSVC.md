@@ -3,6 +3,8 @@ tags:
   - 折腾
   - 开发环境
 datetime: 2024-09-20
+title: VSCode & CMake & vcpkg & MSVC 的 C/C++ 开发环境配置
+aliases: [VSCode & CMake & vcpkg & MSVC 的 C/C++ 开发环境配置]
 ---
 
 # VSCode & CMake & vcpkg & MSVC 的 C/C++ 开发环境配置
@@ -174,7 +176,7 @@ vcpkg install opencv
 因为我们是在 Windows 环境中, 所以库的三元组为 `x64-windows` , 这也是 Windows 上的默认值.
 
 ### 编写 `CMakeLists.txt`
-项目根目录下应该存在一个 `CMakeLists.txt`  来指定构建选项. 下面是一个示例:
+项目根目录下应该存在一个 `CMakeLists.txt` 来指定构建选项. 下面是一个示例:
 
 ```cmake
 # CMakeLists.txt
@@ -219,9 +221,8 @@ int main() {
 └─ CMakePresets.json
 ```
 
-之后进行构建, 使用 `Windows x86_64 MSVC (Debug)` 预设, 应该能在 `build/debug`目录里找到 `text.exe` , 运行它会打印一行 OpenCV 的版本信息.
+之后进行构建, 使用 `Windows x86_64 MSVC (Debug)` 预设, 应该能在 `build/debug` 目录里找到 `text.exe` , 运行它会打印一行 OpenCV 的版本信息.
 
 构建一遍以后再修改源代码, 应该可以享受到 **clangd** 的代码分析和补全了.
-
 
 [^1]: https://cmake.org/cmake/help/latest/variable/CMAKE_EXPORT_COMPILE_COMMANDS.html
