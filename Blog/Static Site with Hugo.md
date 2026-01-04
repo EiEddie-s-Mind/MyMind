@@ -27,6 +27,9 @@ hugo 依赖于 `title` 而非文件名显示文章标题, 使用 `date` 标记�
 将 Linter 的 [标题别名](https://platers.github.io/obsidian-linter/settings/yaml-rules/#yaml-title-alias) 部分设置打开, 便可以自动从第一个 `#` 标签处获取文章标题, 并填写到元数据区, 另外还会将标题名作为别名写入.
 如果以前在使用 `datetime` 字段储存文档修改或编写日期, **强烈建议改为 `date` 字段**, 因为这一键名在 Obsidian 与 hugo 两端都受到良好的支持.
 
+> [!warning]
+> 建议将 Linter 的 *确保中日韩文与英文数字之间有一个空格* 选项中的引号 `"` `'` 删除, 否则中文引号之后也会加入一个空格, 有时会破坏排版.
+
 book 或其他主题提供了一些元数据字段来控制其行为, 例如 `bookToC` 将会控制是否默认展开该文章的目录. 关于 book 的控制字段可以查看其 [文档](https://github.com/alex-shpak/hugo-book?tab=readme-ov-file#page-configuration).
 
 Obsidian 中有些非标准的拓展 Markdown 语法, 例如 *Wiki 链接* 等, 都建议关闭, 因为难以被 hugo 与其他平台的标准化 Markdown 渲染器支持.
@@ -39,13 +42,12 @@ theme = ["hugo-admonitions", "book"]
 ```
 
 > [!note]
-> 一定注意 hugo-admonitions 应该放置于主要主题--这里是 book--前面, 因为主题的使用是从前到后的.
+> 
+> 一定注意 hugo-admonitions 应该放置于主要主题 -- 这里是 book-- 前面, 因为主题的使用是从前到后的.
 > 
 > 另外, 这就是一个 admonition.
 
-## 添加数学支持
-接下来为站点添加数学公式渲染支持, 我们将使用 MathJax, 因为相比 KaTeX, 它支持更多 $\LaTeX$ 语法, 例如 `align` 对齐环境等.
-
+## 定制字体
 hugo 管理站点的方式是 *联合文件系统*.
 简单地说, 站点的各项文件配置都是分层的, 放置在上层的文件将会覆盖下层.
 目录层级如下所示.
@@ -56,64 +58,6 @@ hugo 管理站点的方式是 *联合文件系统*.
 ```
 因此, `layouts/baseof.html` 将会覆盖 `themes/book/layouts/baseof.html`, 其余目录和文件皆是同理.
 
-一般来说, 几乎每个主题都会预留 *注入点 (inject)*.
-它们是主题中空的占位文件, 等待着被来自上层的文件覆盖.
-它们已经被主题中的各项文件引用, 但因为是空的, 不会有任何效果, 当它们被覆盖后, 新文件的内容就会出现在站点中.
-这是一种非侵入式的个性化手段.
-book 主题中提供的注入点可以在 GitHub [自述文件](https://github.com/alex-shpak/hugo-book?tab=readme-ov-file#partials) 中找到.
-
-因为分层文件系统的存在, 再配合注入点, 我们可以在不修改主题的前提下最大程度地个性化, 当然也包括引入 MathJax.
-
-在 `layouts/partials` 中新建 `mathjax.html`, 用于作为组件被调用.
-```html
-<!-- layouts/partials/mathjax.html -->
-{{ if or .Params.math .Site.Params.math }}
-<script>
-  window.MathJax = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']],
-      displayMath: [['$$', '$$'], ['\\[', '\\]']]
-    },
-    options: {
-      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-    }
-  };
-</script>
-<script
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-  async>
-</script>
-{{ end }}
-```
-这段代码引入了 MathJax, 并配置渲染块标识符, 内联公式为 `$...$` `\(...\)`, 行间公式为 `$$...$$` `\[...\]`.
-
-被 `{{ }}` 括起来的部分为 *模板*, 它将作为占位符被解析器用正文替换, 也可作为判断语句.
-文件中的模板是一个判断, 意味**仅当文章元数据启用了 `math` 或站点配置中启用了 `math`, 才会引入 MathJax 渲染**.
-为了全局启用, 可以在站点配置文件 `hugo.toml` 中声明
-```toml
-[params]
-math = true
-```
-
-接下来需要将上述文件引入主题, 我们使用 book 主题提供的 **`<head>` 末尾处**的注入点 `layouts/partials/docs/inject/head.html`.
-将下面的内容放入此文件
-```html
-<!-- layouts/partials/docs/inject/head.html -->
-{{ partial "mathjax.html" . }}
-```
-这段模板会把上面编写的 `partial/mathjax.html` 引入.
-于是最终 MathJax 相关代码将会出现在页面 html `<head>` 标签结尾处.
-
-此时理论上就可以使用了, 但是会出现一些 bug, 例如公式块内如果出现 Markdown 语法, 例如 `$$A_n*B_m$$` 中出现了一个 Markdown 强调块 `_..._`, 此时 hugo 将会先按 Markdown 解析, 将 `_..._` 替换成特定的样式, 如此一来公式就不能被正确渲染了.
-为了避免这种问题, 我们启用 Markdown 解析时的 *透传* 功能[^1], 在 `hugo.toml` 中配置
-```toml
-[markup.goldmark.extensions.passthrough]
-enable = true
-delimiters = { block = [['\[', '\]'], ['$$', '$$']], inline = [['\(', '\)'], ['$', '$']] }
-```
-这会要求 Markdown 解析器将上述标识符中包裹的内容不做任何处理, 直接移交渲染流水线的下一层, 即 MathJax 处理, 于是公式便可正常渲染,
-
-## 定制字体
 我希望站点正文字体使用衬线体, 以此增强内容的出版物质感, 更有 "文章感".
 book 主题提供了设置字体的 [定制文件](https://github.com/alex-shpak/hugo-book?tab=readme-ov-file#extra-customisation) `assets/_fonts.scss`, 我们修改它即可更换字体.
 
@@ -148,6 +92,12 @@ code, pre {
 book 中同样也有修改时间的原生支持, 但是需要与 GitHub 仓库进行集成, 这是一个比较苛刻的条件, 我无法做到, 因此我将手动实现一个放置在左下角的文章修改时间.
 如果你对 book 中提供的修改时间显示有兴趣, 可以去看 [站点配置](https://github.com/alex-shpak/hugo-book?tab=readme-ov-file#site-configuration) 中 `enableGitInfo` 与 `BookLastChangeLink` 两个字段.
 只有这两者都被正确配置, 时间显示才会开启.
+
+一般来说, 几乎每个主题都会预留 *注入点 (inject)*.
+它们是主题中空的占位文件, 等待着被来自上层的文件覆盖.
+它们已经被主题中的各项文件引用, 但因为是空的, 不会有任何效果, 当它们被覆盖后, 新文件的内容就会出现在站点中.
+这是一种非侵入式的个性化手段.
+book 主题中提供的注入点可以在 GitHub [自述文件](https://github.com/alex-shpak/hugo-book?tab=readme-ov-file#partials) 中找到.
 
 我将利用 book 在**页面内容之后**的注入点 `layouts/partials/docs/inject/content-after.html` 来手动实现一个修改时间显示, 它会读取文档元数据 `date` 字段来格式化为相应的日期显示.
 
@@ -195,6 +145,9 @@ book 中同样也有修改时间的原生支持, 但是需要与 GitHub 仓库�
 这段代码将从文档元数据字段 `date` 中读取日期, 并按站点设置 `BookDateFormat` 中规定的样式格式化.
 最后的显示效果为左下角的 *Last updated: January 2, 2006*, 斜体, 上方覆盖一条与文字等长的灰色分割线.
 
+## 数学支持
+关于为 hugo 添加 MathJax 支持, 请看 [这篇文章](<Hugo with Math.md>).
+
 ## 最终配置文件
 最终使用的 `hugo.toml` 配置文件如下所示
 ```toml
@@ -221,7 +174,5 @@ unsafe = true
 
 [markup.goldmark.extensions.passthrough]
 enable = true
-delimiters = { block = [['\[', '\]'], ['$$', '$$']], inline = [['\(', '\)'], ['$', '$']] }
+delimiters = { block = [['$$', '$$']], inline = [['\(', '\)']] }
 ```
-
-[^1]: [Hugo+Mathjax的正确姿势](https://www.windtunnel.cn/posts/hugo/hugo-mathjax/)
