@@ -17,6 +17,7 @@ aliases: [可交换的线性变换]
 
 ## 充要条件
 复数域上线性变换 $A$, $B$ 可交换的充要条件是:
+
 > $A$ 的每个广义特征空间 $E_{\lambda}$ 都是 $B$ 的不变子空间.
 
 其中*广义特征空间* $E_{\lambda} = \{\mathbf{v} ~ | ~ (A - \lambda I)^m \; \mathbf{v} = \mathbf{0}, m \in \mathbb{N}_+\}$.
