@@ -3,7 +3,7 @@ tags:
   - linux
   - 编程
   - undone
-datetime: 2025-04-18
+date: 2025-04-18
 title: 异步非阻塞串口数据接收
 aliases: [异步非阻塞串口数据接收]
 ---

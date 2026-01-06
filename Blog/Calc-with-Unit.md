@@ -2,7 +2,7 @@
 tags:
   - 折腾
   - 物理
-datetime: 2026-01-03
+date: 2026-01-03
 title: 带有单位的物理计算
 aliases:
   - 带有单位的物理计算

@@ -3,7 +3,7 @@ tags:
   - 数学
   - 物理
   - 计算机图形学
-datetime: 2025-10-26
+date: 2025-10-26
 title: 密度流体的动态模拟
 aliases: [密度流体的动态模拟]
 ---
@@ -59,7 +59,7 @@ $$\frac{\partial \mathbf{u}}{\partial t} = -\nabla \frac{p}{\rho} - (\mathbf{u} 
 每一步都必须在设定的边界条件下进行; 并且都要进行**投影** (**project**), 以保证流体不可压缩.
 
 我们之所以这样做, 是因为以下两点. \
-第一, 方程中 $-\nabla \frac{p}{\rho}$ 项的作用是保证流体的不可压缩性, 即 $\nabla \cdot \mathbf{u} = 0$. 此处的进一步论述可以查看后文 [[#投影]] 一节. \
+第一, 方程中 $-\nabla \frac{p}{\rho}$ 项的作用是保证流体的不可压缩性, 即 $\nabla \cdot \mathbf{u} = 0$. 此处的进一步论述可以查看后文 [投影](#投影) 一节. \
 第二, 方程可以被拆分为以下形式:
 $$\mathbf{u}^*(t+\mathrm{d}t) = \mathbf{u}(t) + \mathbf{a} \; \mathrm{d}t + \nu \nabla^2 \mathbf{u} \; \mathrm{d}t - (\mathbf{u} \cdot \nabla) \mathbf{u} \; \mathrm{d}t$$
 上式中 $\mathbf{u}(t)$ 是 $t$ 时刻的速度;

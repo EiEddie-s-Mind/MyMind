@@ -3,12 +3,12 @@ tags:
   - 折腾
   - 编程
   - 开发环境
-datetime: 2025-07-05
-title: "ESP32: 环境配置与开发"
-aliases: ["ESP32: 环境配置与开发"]
+date: 2025-07-05
+title: ESP32 环境配置与开发
+aliases: [ESP32 环境配置与开发, "ESP32: 环境配置与开发"]
 ---
 
-# ESP32: 环境配置与开发
+# ESP32 环境配置与开发
 *我必须承认, esp idf 是我配置过最困难的开发环境.*
 
 本篇文章的开发环境选择是 **Visual Studio Code** 与 **esp idf**.

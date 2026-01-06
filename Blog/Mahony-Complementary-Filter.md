@@ -2,7 +2,7 @@
 tags:
   - 数学
   - 控制
-datetime: 2025-06-30
+date: 2025-06-30
 title: Mahony 非线性互补滤波器
 aliases: [Mahony 非线性互补滤波器]
 ---
@@ -110,7 +110,7 @@ $$\begin{align}
   &= - k_P (1 - \cos{\theta}) \\
   & \leq 0
 \end{align}$$
-上面证明中用到的旋转矩阵计算公式可以在 [[rotation]] 中找到.
+上面证明中用到的旋转矩阵计算公式可以在 [这里](Rigid-Rotation.md) 中找到.
 当且仅当 $\tilde{R}^2$ 的转角 $\theta = 0, 2\pi$ 时取等号,
 即 $\tilde{R}$ 转角为 $0$ 或 $\pi$ 时.
 对于转角为 $\pi$ 的特殊情况在论文中做了详细讨论.

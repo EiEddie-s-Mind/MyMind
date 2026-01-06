@@ -2,12 +2,12 @@
 tags:
   - 折腾
   - 开发环境
-datetime: 2024-09-20
-title: VSCode & CMake & vcpkg & MSVC 的 C/C++ 开发环境配置
-aliases: [VSCode & CMake & vcpkg & MSVC 的 C/C++ 开发环境配置]
+date: 2024-09-20
+title: Windows 下的现代 C/C++ 开发环境配置
+aliases: [Windows 下的现代 C/C++ 开发环境配置, VSCode & CMake & vcpkg & MSVC 的 C/C++ 开发环境配置]
 ---
 
-# VSCode & CMake & vcpkg & MSVC 的 C/C++ 开发环境配置
+# Windows 下的现代 C/C++ 开发环境配置
 
 首先应该确保电脑上有这些必需的软件:
 - CMake
@@ -162,7 +162,7 @@ cmake → ninja → cl (MSVC)
 
 > [!Warning]
 > 必须初始化 MSVC 环境后才能调用它的编译套件.
-> 
+>
 > 可以在开发人员 *命令提示符中* 输入 `code <path>` 命令打开 VS Code 后进行操作.
 
 ### 安装 OpenCV
