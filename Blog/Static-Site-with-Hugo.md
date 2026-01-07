@@ -11,30 +11,16 @@ aliases: [使用 Hugo 搭建静态站点]
 另外文章虽在 GitHub 保存, 但其缺失对元数据的整理功能, 对于必要的 Markdown 拓展语法支持也不佳, 更关键的是, 其使用的 KaTeX 数学引擎较为简陋, 难以招架文章中出现的连篇累牍的公式.
 无奈之下, 恐怕建立一个阅览站点成了唯一可行的选择.
 
+本篇文章着重介绍站点本身的配置与搭建, 关于内容的编写与发布请看 [这篇文章](Article-Processing-Pipeline.md).
+
 ## 主题选择
 我希望站点整体上是静态的, 没有过分到眼花缭乱的小动画与动态效果, 主题风格简洁严肃, 就像一本书或一页纸一样, 仅用来供人阅览而不喧宾夺主.
 最后我选择的主题是 [book](https://github.com/alex-shpak/hugo-book), 效果和它的名字一样沉静.
 然而不得不说的是, 或许我下面的要求过分了点, 没有让我完全满意的主题, book 也不例外.
 于是只好对它进行一番改造了.
 
-## 格式化文档
-首先要做的就是保证文章格式能够被 hugo 正确识别, 因此一方面要保证元数据的正确, 另一方面要确保正文中没有不被支持的 Markdown 语法.
-我们的目的是文章能够在 Obsidian 与 hugo 两端都能被正确渲染.
-日后发布文章或博客的工作流将是使用 Obsidian 编写, 并在本地查看审阅, 待满意后使用 hugo 打包并推送服务器上线.
-
-hugo 依赖于 `title` 而非文件名显示文章标题, 使用 `date` 标记文章修改时间, 并且会读取 `tags` 来分类文章.
-为了避免流程出错, 与减轻心智负担, 可以在 Obsidian 中安装 [Linter](https://github.com/platers/obsidian-linter) 插件, 它可以自动格式化文档, 并重排与补全元数据.
-将 Linter 的 [标题别名](https://platers.github.io/obsidian-linter/settings/yaml-rules/#yaml-title-alias) 部分设置打开, 便可以自动从第一个 `#` 标签处获取文章标题, 并填写到元数据区, 另外还会将标题名作为别名写入.
-如果以前在使用 `datetime` 字段储存文档修改或编写日期, **强烈建议改为 `date` 字段**, 因为这一键名在 Obsidian 与 hugo 两端都受到良好的支持.
-
-> [!warning]
-> 建议将 Linter 的 *确保中日韩文与英文数字之间有一个空格* 选项中的引号 `"` `'` 删除, 否则中文引号之后也会加入一个空格, 有时会破坏排版.
-
-book 或其他主题提供了一些元数据字段来控制其行为, 例如 `bookToC` 将会控制是否默认展开该文章的目录. 关于 book 的控制字段可以查看其 [文档](https://github.com/alex-shpak/hugo-book?tab=readme-ov-file#page-configuration).
-
-Obsidian 中有些非标准的拓展 Markdown 语法, 例如 *Wiki 链接* 等, 都建议关闭, 因为难以被 hugo 与其他平台的标准化 Markdown 渲染器支持.
-
-但对于一些特别有益的拓展语法, 例如 `admonitions`, 我们希望尽可能地使其可用.
+## 特殊语法支持
+一些 Markdown 方言提供了特别有益的拓展语法, 例如 `admonitions`, 我们希望尽可能地使其可用.
 幸运地是 book 主题本身就支持这一语法, 因此我们并不需要大费周章配置.
 但如果是不支持此语法的主题, 可以额外安装一个 [hugo-admonitions](https://github.com/KKKZOZ/hugo-admonitions) 主题, 并将其置于主要主题之前, 这样便可覆盖原主题来提供 admonitions 支持, 如下
 ```
