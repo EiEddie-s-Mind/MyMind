@@ -105,7 +105,7 @@ book 主题中提供的注入点可以在 GitHub [自述文件](https://github.c
 <!-- layouts/partials/docs/inject/content-after.html -->
 {{ $date := .Lastmod | default .Date }}
 
-{{ if not .IsHome }}
+{{ if .IsPage  }}
 {{ with $date }}
   <div class="flex flex-wrap justify-between">
     <div class="flex align-center text-sm text-muted">
@@ -146,7 +146,23 @@ book 主题中提供的注入点可以在 GitHub [自述文件](https://github.c
 最后的显示效果为左下角的 *Last updated: January 2, 2006*, 斜体, 上方覆盖一条与文字等长的灰色分割线.
 
 ## 数学支持
-关于为 hugo 添加 MathJax 支持, 请看 [这篇文章](<Hugo with Math.md>).
+关于为 hugo 添加 MathJax 支持, 请看 [这篇文章](Hugo-with-Math.md).
+
+## 主页面
+访问网址时进入的页面为主页面, 默认情况下主页面是空的, 你可以在 `content` 目录中新建一个 `content/_index.md` 来定制你主页面的内容.
+我希望在主页中呈现一个导航菜单, 按文章 tag 分类.
+要做到这一点, 让 hugo 自行渲染是最方便的, 免于我们手动编写代码.
+
+book 主题中自带了一个导航页, 但是隐藏得比较深.
+这一部分页面编写在 book 仓库的 `layouts/_partials/docs/taxonomy.html` 中, 我们直接调用这一部分代码即可.
+我将使用 hugo 提供的 *Shortcode* 机制, 它能让我们在 Markdown 中引入 HTML 或其他逻辑.
+
+在 `layouts/shortcodes` 中新建 `book-taxonomy.html`, 如下
+```html
+<!-- layouts/shortcodes/book-taxonomy.html -->
+{{ partial "docs/taxonomy" .Page }}
+```
+这样你就可以在 Markdown 中使用 `{{< book-taxonomy >}}` 来渲染一个按 tag 分类的导航页.
 
 ## 最终配置文件
 最终使用的 `hugo.toml` 配置文件如下所示
