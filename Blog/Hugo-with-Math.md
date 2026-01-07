@@ -75,7 +75,7 @@ delimiters = { block = [['$$', '$$']], inline = [['\(', '\)']] }
 
 下面是能够达成我们目标的 lua 过滤器, 用于被 pandoc 使用
 ```lua
--- math-delimiter.lua
+-- delimiter.lua
 
 function Math(el)
   if el.mathtype == "InlineMath" then
@@ -84,6 +84,7 @@ function Math(el)
   end
   return nil
 end
+
 
 function Code(el)
   local s = el.text
@@ -98,7 +99,7 @@ end
 
 并且应当以下面的方式使用
 ```bash
-pandoc -s in.md -t markdown --lua-filter=math-delimiter.lua -o out.md
+pandoc -s in.md -t markdown --lua-filter=delimiter.lua -o out.md
 ```
 不要忘记 `-s`/`--standalone=true` 参数, 否则你的元数据将被吞掉.
 
