@@ -50,17 +50,31 @@ book 主题提供了设置字体的 [定制文件](https://github.com/alex-shpak
 将下面的内容填入此文件中
 ```scss
 /* assets/_fonts.scss */
-@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/cn-fontsource-source-han-serif-sc-vf@1.0.9/font.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/Iosevka/6.0.0/iosevka/iosevka.min.css');
+
 
 :root {
-  --paper-font-body: "Source Serif 4", "Noto Serif SC", "serif";
-  --paper-font-ui: "Inter", "system-ui", "-apple-system", "Segoe UI", "Helvetica Neue", "Arial";
-  --paper-font-mono: "Iosevka", "JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace";
+  --paper-font-body: "Source Serif 4", "Source Han Serif SC", "Noto Serif SC", serif;
+  --paper-font-ui: "Inter", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial;
+  --paper-font-mono: "Iosevka Web", "Iosevka", "JetBrains Mono", ui-monospace, "SFMono-Regular", "Menlo", monospace;
+
+  --normal-wght: 300;
+  --mono-wght: 400;
+  --strong-wght: 600;
 }
 
 
 html, body {
   font-family: var(--paper-font-body);
+  font-weight: var(--normal-wght);
+}
+
+strong {
+  font-weight: var(--strong-wght) !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -69,10 +83,12 @@ h1, h2, h3, h4, h5, h6 {
 
 code, pre {
   font-family: var(--paper-font-mono);
-  font-size: 0.95em;
+  font-weight: var(--mono-wght);
 }
 ```
-这将设置正文字体为衬线体, 标题为无衬线体, 代码块为等宽无衬线体.
+这将设置正文字体为衬线体 (中文 Source Han Serif SC, 西文 Source Serif), 标题为无衬线体 (Inter), 代码块为等宽无衬线体 (Iosevka);
+并将加粗 `strong` 字重改大来提高可见性.
+以上 4 个字体都配置了 CDN.
 
 ## 添加文章修改时间
 book 中同样也有修改时间的原生支持, 但是需要与 GitHub 仓库进行集成, 这是一个比较苛刻的条件, 我无法做到, 因此我将手动实现一个放置在左下角的文章修改时间.
