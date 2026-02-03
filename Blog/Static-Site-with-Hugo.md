@@ -2,6 +2,7 @@
 tags:
   - 折腾
 date: 2026-01-04
+lastmod: 2026-02-03
 title: 使用 Hugo 搭建静态站点
 aliases: [使用 Hugo 搭建静态站点]
 ---
@@ -105,20 +106,24 @@ book 主题中提供的注入点可以在 GitHub [自述文件](https://github.c
 
 ```html
 <!-- layouts/partials/docs/inject/content-after.html -->
-{{ $date := .Lastmod | default .Date }}
+{{ $dateFormat := default "January 2, 2006" $.Site.Params.BookDateFormat }}
 
-{{ if .IsPage  }}
-{{ with $date }}
-  <div class="flex flex-wrap justify-between">
-    <div class="flex align-center text-sm text-muted">
-      <!--img src="{{ partial "docs/icon" "calendar" }}" class="book-icon" alt="{{ partial "docs/text/i18n" "Calendar" }}" /-->
-      <span class="overline" style="font-style:italic;">Last updated: {{ .Format (default "January 2, 2006" $.Site.Params.BookDateFormat) }}</span>
+{{ if and .IsPage .Date }}
+  <div class="flex">
+    <div  style="font-style:italic;">
+      <span class="overline"></span>
+      <span style="display:block;">Created in {{ .Date.Format $dateFormat }}</span>
+      <span style="display:block;">Last modified in {{ .Lastmod.Format $dateFormat }}</span>
     </div>
   </div>
 {{ end }}
-{{ end }}
 ```
-以及其配套的样式 `overline`
+
+这段代码将从文档元数据字段 `date` 中读取日期, 并按站点设置 `BookDateFormat` 中规定的样式格式化.
+上次修改日期 `lastmod` 由 hugo 提供, 它总是存在, 当 markdown 的 front matter 中不存在此字段时, 它的值将回退到 `date` 的值[^1].
+最后的显示效果为左下角的 *Created in January 2, 2006* 与 *Last modified in January 2, 2006*, 分两行显示. 斜体, 上方覆盖一条与文字等长的灰色分割线.
+
+其配套的样式 `overline` 定义在 `assets/_custom.scss` 中
 ```scss
 /* assets/_custom.scss */
 
@@ -143,9 +148,49 @@ book 主题中提供的注入点可以在 GitHub [自述文件](https://github.c
   pointer-events: none;
   transform: translateY(-200%);
 }
+
+/* skipping... */
 ```
-这段代码将从文档元数据字段 `date` 中读取日期, 并按站点设置 `BookDateFormat` 中规定的样式格式化.
-最后的显示效果为左下角的 *Last updated: January 2, 2006*, 斜体, 上方覆盖一条与文字等长的灰色分割线.
+
+## 未完成标记
+如果文章未完成, 我会在文章的 tag 中添加一个 `undone`.
+我们将要给所有未完成的文章添加一个标记, 使读者能够意识到这一点, 否则可能会对只有半拉的内容产生疑问.
+
+我们使用 book 在**页面内容之前**的注入点 `layouts/partials/docs/inject/content-before.html` 来实现.
+
+```html
+<!-- layouts/partials/docs/inject/content-before.html -->
+{{ $tags := .Params.tags }}
+{{ $hasUndone := false }}
+
+{{ range $t := $tags }}
+  {{ if eq (lower (print $t)) "undone" }}
+    {{ $hasUndone = true }}
+  {{ end }}
+{{ end }}
+
+{{ if $hasUndone }}
+  <div style="display:flex; margin-bottom:5px;">
+    <span>[</span>
+    <span class="status-undone">未完成</span>
+    <span>]</span>
+  </div>
+{{ end }}
+```
+
+这段代码会尝试在 tag 列表中查找 `undone`, 如果找到了, 就会在标题之上显示一个 *[未完成]*, 字体颜色为红色, 醒目地警告读者.
+
+其配套的样式 `status-undone` 同样定义在 `assets/_custom.scss` 中
+```scss
+/* assets/_custom.scss */
+
+/* skipping... */
+
+.status-undone {
+  color: var(--color-accent-caution);
+  font-family: var(--paper-font-ui);
+}
+```
 
 ## 数学支持
 关于为 hugo 添加 MathJax 支持, 请看 [这篇文章](Hugo-with-Math.md).
@@ -194,3 +239,5 @@ unsafe = true
 enable = true
 delimiters = { block = [['$$', '$$']], inline = [['\(', '\)']] }
 ```
+
+[^1]: [Hugo: Configure front matter](https://gohugo.io/configuration/front-matter/#dates)
