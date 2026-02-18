@@ -183,3 +183,72 @@ def fk(thetas: np.ndarray):
     P = M_s[0] + l
     return P
 ```
+
+## 反向运动学
+普通机器人的逆运动学解算总是比正运动学困难得多, 但 Delta 机器人恰恰是个例外.
+反向运动学, 或逆运动学的任务是已知末端 $P$ 的位置, 求解广义坐标, 也就是极角 $\theta_i$.
+
+令 $\mathbf{a} := \overrightarrow{BP} = P - \mathbf{g}$, 显然 $\mathbf{a} - \mathbf{L} = \mathbf{l}$.
+两边平方得 $L^2 + a^2 - 2 \; \mathbf{L} \cdot \mathbf{a} = l^2$.
+又因为 $\mathbf{L} = L (\hat{\mathbf{k}} \sin{\theta} + \hat{\mathbf{g}} \cos{\theta})$, 有
+$$\begin{align}
+& 2 \; \mathbf{L} \cdot \mathbf{a} = -(l^2 - L^2 -a^2) \\
+= \;& 2L \, \mathbf{a} \cdot \hat{\mathbf{k}} \; \sin{\theta} + 2L \, \mathbf{a} \cdot \hat{\mathbf{g}} \; \cos{\theta}
+\end{align}$$
+
+令 $A = 2L \, \mathbf{a} \cdot \hat{\mathbf{k}}$, $B = 2L \, \mathbf{a} \cdot \hat{\mathbf{g}}$, $C = l^2 - L^2 -a^2$, 线性三角方程 $A \sin{\theta} + B \cos{\theta} + C = 0$ 的解即为所求.
+
+### 线性三角方程
+形如 $A \sin{x} + B \cos{x} + C = 0$ 的方程称为*线性三角方程* (*Linear Trigonometric Equation*).
+求解它的方法有以下几种:
+
+#### 恒等变换
+利用恒等变换 $A \sin{x} + B \cos{x} = R \sin{(x + \phi)}$, 其中 $R = \sqrt{A^2+B^2}$, $\cos{\phi} = \frac{A}{R}$, $\sin{\phi} = \frac{B}{R}$.
+
+于是原方程变成 $R \sin{(x+\phi)} + C = 0$, 即 $\sin{(x+\phi)} = -\frac{C}{R}$.
+设 $\alpha = \arcsin{(-\frac{C}{R})}$, 则解为 $x + \phi = \alpha$ 或 $x + \phi = \pi - \alpha$.
+所以, 在一个周期内, $x = -\varphi + \alpha$ 或 $x = -\varphi + \pi - \alpha$.
+
+#### 正切半角
+做换元 $t := \tan\frac{x}{2}$, $\sin x = \frac{2t}{1+t^2}$, $\cos x = \frac{1-t^2}{1+t^2}$.
+原方程化为二次方程 $(A - C) \; t^2 + 2B \; t + (A + C) = 0$.
+$t$ 很容易解出, 为 $t = \frac{-B \pm \sqrt{B^2+C^2-A^2}}{A-C}$;
+再由 $x = 2\arctan t$ 得解.
+
+### 代码
+```python
+import numpy as np
+from numpy.linalg import norm
+
+
+gg = 1.
+LL = 1.
+ll = 2.
+
+def solve_lte(A, B, C):
+    """解线性三角方程 (Linear Trigonometric Equation)
+    `A sin(x) + B cos(x) + C = 0`
+
+    当无解 (解不为实数) 时抛出一个 `ComplexWarning` 异常"""
+    delta = A**2 + B**2 - C**2
+    if delta < 0:
+        raise np.exceptions.ComplexWarning
+    # 另一个解:
+    # np.arctan2(-A*C + np.sign(A)*B*np.sqrt(delta), -B*C - np.sign(A)*A*np.sqrt(delta))
+    return np.arctan2(-np.sign(A)*A*C - B*np.sqrt(delta), -np.sign(A)*B*C + A*np.sqrt(delta))
+
+
+def ik(P: np.ndarray, phi):
+    """逆运动学
+
+    找到目标点移动到指定位置 P 时, 方位角为 phi 的一支应该具有的极角 theta.
+    """
+    g  = g_(phi)
+    k  = np.array([0,0,1.])
+    a  = P - g
+    aa = norm(a)
+    if aa > ll + LL:
+        raise ValueError(P)
+    g_h = g/gg
+    return solve_lte(2*LL*(a@k), 2*LL*(a@g_h), ll**2-aa**2-LL**2)
+```
