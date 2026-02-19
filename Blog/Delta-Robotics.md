@@ -3,12 +3,11 @@ tags:
   - 数学
   - 物理
   - 控制
-  - undone
-  - todo
 date: 2026-02-17
-lastmod: 2026-02-18
+lastmod: 2026-02-19
 title: Delta 机器人的动力学建模
-aliases: [Delta 机器人的动力学建模]
+aliases:
+  - Delta 机器人的动力学建模
 ---
 
 # Delta 机器人的动力学建模
@@ -252,3 +251,72 @@ def ik(P: np.ndarray, phi):
     g_h = g/gg
     return solve_lte(2*LL*(a@k), 2*LL*(a@g_h), ll**2-aa**2-LL**2)
 ```
+
+## 动力学
+动力学的中心问题在于求出雅可比矩阵, 它可以建立广义速度与末端速度的关系, 进一步可以得出力矩到末端力的映射.
+结合上面运动学建模, 可以获取我们关系的末端全部信息, 包括力, 位置与速度.
+
+令末端 $P$ 的位置为 $\mathbf{p}$, 广义坐标 $\mathbf{\theta} = (\theta_1, \theta_2, \theta_3)^T$, 所需的雅可比矩阵为 $J = \frac{\partial \mathbf{p}}{\partial \mathbf{\theta}}$, 即
+$$\mathrm{d} \mathbf{p} = J \, \mathrm{d} \mathbf{\theta}$$
+也即
+$$\mathbf{v} = J \, \dot{\mathbf{\theta}}$$
+其中 $\mathbf{v}$ 表示末端速度, $\dot{\mathbf{\theta}}$ 表示对 $\mathbf{\theta}$ 求导.
+
+对于我们讨论的非冗余 Delta 机构, 其末端自由度与广义坐标维度相等, 这意味着在非退化位形下 $J$ 满秩.
+因此, 任意满足 $\dot{\mathbf{\theta}} \rightarrow \mathbf{v}$ 的线性映射都唯一是 $J$, 我们只需找到**速度是如何从起始端传递到末端**即可求出 $J$.
+对于这种末端位置高度非形式化的机构, 求微分非常复杂, 几乎不可能求出, 上面的讨论给出了另一种求解 $J$ 的方式.
+回到我们关心的 Delta 机器人, 只需做速度分解即可.
+
+![单一支部的侧视图](figs/Delta-Robotics/model-side.png)
+
+主动臂 $BM$ 转动在 $M$ 点产生的速度为 $\mathbf{u}_0$, 令 $\theta$ 的正方向为右手方向 (指向纸面之外), 则
+$$\mathbf{u}_0 = \mathbf{\omega} \times \mathbf{L}$$
+其中 $\mathbf{\omega} = \dot{\theta} \, (\mathbf{g} \times \mathbf{L})^\wedge$, $(\cdot)^\wedge$ 表示归一化.
+
+进一步, 通过从动杆 $MP$ 传递到末端的速度为 $\mathbf{u}$, 它是 $\mathbf{u}_0$ 在 $\mathbf{l}$ 上的投影, 即
+$$\mathbf{u} = \hat{\mathbf{l}} \, \hat{\mathbf{l}}^T \mathbf{u}_0$$
+即
+$$\mathbf{u} = L \dot{\theta} \, (\hat{\mathbf{l}} \cdot  \hat{\mathbf{L}}_\perp) \, \hat{\mathbf{l}}$$
+其中 $\hat{\mathbf{L}}_\perp := \hat{\mathbf{k}} \cos\theta - \hat{\mathbf{g}} \sin\theta$.
+
+三个从动杆上的速度在非退化位形下是线性无关的, 于是它们构成末端速度空间的一组基 $\{\mathbf{u}_i\}$, 每个 $\mathbf{v}$ 都是它们的线性组合, 即有
+$$\mathbf{v} = J \, \dot{\mathbf{\theta}} = \sum_i \mathbf{u}_i$$
+令 $\mathbf{J} := L  \, (\hat{\mathbf{l}} \cdot  \hat{\mathbf{L}}_\perp) \, \hat{\mathbf{l}}$, 且同样 $\hat{\mathbf{L}}_\perp = \hat{\mathbf{k}} \cos\theta - \hat{\mathbf{g}} \sin\theta$, 则
+$$J = (\mathbf{J}_i) = (\mathbf{J}_1, \mathbf{J}_2, \mathbf{J}_3)$$
+
+在实际应用中, 一般已知 $\mathbf{\theta}$ 与 $\mathbf{p}$, 要求 $J$.
+此时只需使用很小的开销计算 $\mathbf{L}$ 和 $\mathbf{L}_\perp$, 而后求出 $\mathbf{l} = \mathbf{p} - \mathbf{L} - \mathbf{g}$, 就可应用公式.
+$\mathbf{g}$ 和 $\hat{\mathbf{k}}$ 应当是缓存的.
+上述提到的向量长度都已知, 因此归一化的开销同样很小.
+
+### 增量更新
+考虑一个运动的 Delta 机器人, 我们知道它当前时刻的 $\mathbf{\theta}$ 和 $\mathbf{p}$, 以及 $J$ 和很短时间内广义坐标的改变 $\mathrm{d} \mathbf{\theta}$, 此时末端位置的改变也很容易求出 $\mathrm{d} \mathbf{p} = J \, \mathbf{d} \mathbf{\theta}$.
+如何求解 $\mathrm{d} t$ 时间后的雅可比 $J'$?
+显然, 从头求解一遍运动学是不划算的, 这一操作过于昂贵, 而且上面的信息已经足够我们求解 $J'$.
+此时更好的方法是求出 $\mathrm{d} J$, 而后由 $J' = J + \mathrm{d} J$ 得出 $J'$, 这被称为增量更新.
+
+已知 $\mathrm{d} \mathbf{L}$ 和 $\mathrm{d} \mathbf{p}$, 那么 $\mathrm{d} \mathbf{l} = \mathrm{d} \mathbf{p} - \mathrm{d} \mathbf{L}$, 并且 $\mathrm{d} \mathbf{L} = L \, \mathrm{d}\theta \, \hat{\mathbf{L}}_\perp$, $\mathrm{d} \hat{\mathbf{L}}_\perp = -\hat{\mathbf{L}} \, \mathrm{d} \theta$.
+对于 $J$ 的分量 $\mathbf{J}$, 有
+$$\begin{align}
+\mathrm{d} \mathbf{J} &= L \, ((\frac{\mathrm{d} \mathbf{l}}{l} \cdot \hat{\mathbf{L}}_\perp) \, \hat{\mathbf{l}} +
+(\hat{\mathbf{l}} \cdot \mathrm{d} \hat{\mathbf{L}}_\perp) \, \hat{\mathbf{l}} +
+(\hat{\mathbf{l}} \cdot \hat{\mathbf{L}}_\perp) \, \frac{\mathrm{d} \mathbf{l}}{l}) \\
+  &= L \, ((\frac{1}{l} (\mathrm{d} \mathbf{p} - \mathrm{d}{\mathbf{L}}) \cdot \hat{\mathbf{L}}_\perp) \, \hat{\mathbf{l}} -
+  (\hat{\mathbf{l}} \cdot \hat{\mathbf{L}}) \, \mathrm{d} \theta \, \hat{\mathbf{l}} +
+  \frac{\|\mathbf{J}\|}{L} \, \frac{\mathrm{d} \mathbf{l}}{l}) \\
+  &= L \, (\frac{1}{l} (\mathrm{d} \mathbf{p} \cdot \hat{\mathbf{L}}_\perp - \mathrm{d}{\mathbf{L}} \cdot \hat{\mathbf{L}}_\perp) \, \hat{\mathbf{l}} -
+  (\hat{\mathbf{l}} \cdot \hat{\mathbf{L}}) \, \mathrm{d} \theta \, \hat{\mathbf{l}}) +
+  \|\mathbf{J}\| \, \frac{\mathrm{d} \mathbf{l}}{l} \\
+  &= L \, (\frac{1}{l} (\mathrm{d} \mathbf{p} \cdot \hat{\mathbf{L}}_\perp) \, \hat{\mathbf{l}} -
+  \frac{1}{l} (L \, \mathrm{d} \theta) \, \hat{\mathbf{l}} -
+  (\hat{\mathbf{l}} \cdot \hat{\mathbf{L}}) \, \mathrm{d} \theta \, \hat{\mathbf{l}}) +
+  \|\mathbf{J}\| \, \frac{\mathrm{d} \mathbf{l}}{l} \\
+  &= \frac{L}{l} (\mathrm{d} \mathbf{p} \cdot \hat{\mathbf{L}}_\perp) \, \hat{\mathbf{l}} -
+  (\frac{L}{l} + \hat{\mathbf{l}} \cdot \hat{\mathbf{L}}) \, L \, \mathrm{d} \theta \, \hat{\mathbf{l}} +
+  \|\mathbf{J}\| \, \frac{\mathrm{d} \mathbf{l}}{l} \\
+\end{align}$$
+这三项的计算都比较廉价.
+
+计算出 $\mathrm{d} \mathbf{J}$ 后, 就有
+$$\mathrm{d} J = (\mathrm{d} \mathbf{J}_i)$$
+如此一来便可计算 $J' = J + \mathrm{d} J$.
