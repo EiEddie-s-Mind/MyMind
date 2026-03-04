@@ -2,6 +2,7 @@
 tags:
   - 物理
 date: 2025-12-15
+marked: true
 title: 量子力学中的角动量
 aliases: [量子力学中的角动量]
 ---

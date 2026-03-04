@@ -5,9 +5,9 @@ tags:
   - 控制
 date: 2026-02-17
 lastmod: 2026-02-19
+marked: true
 title: Delta 机器人的动力学建模
-aliases:
-  - Delta 机器人的动力学建模
+aliases: [Delta 机器人的动力学建模]
 ---
 
 # Delta 机器人的动力学建模

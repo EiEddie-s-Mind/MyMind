@@ -4,6 +4,7 @@ tags:
   - 物理
   - 计算机图形学
 date: 2025-10-26
+marked: true
 title: 密度流体的动态模拟
 aliases: [密度流体的动态模拟]
 ---

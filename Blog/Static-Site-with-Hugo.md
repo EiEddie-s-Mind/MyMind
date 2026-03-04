@@ -2,7 +2,8 @@
 tags:
   - 折腾
 date: 2026-01-04
-lastmod: 2026-02-03
+lastmod: 2026-03-04
+marked: true
 title: 使用 Hugo 搭建静态站点
 aliases: [使用 Hugo 搭建静态站点]
 ---
