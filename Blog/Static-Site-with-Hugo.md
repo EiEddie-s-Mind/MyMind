@@ -35,7 +35,7 @@ theme = ["hugo-admonitions", "book"]
 > 另外, 这就是一个 admonition.
 
 ## 定制字体
-hugo 管理站点的方式是 *联合文件系统*.
+Hugo 管理站点的方式是 *联合文件系统*.
 简单地说, 站点的各项文件配置都是分层的, 放置在上层的文件将会覆盖下层.
 目录层级如下所示.
 ```
@@ -92,7 +92,7 @@ code, pre {
 以上 4 个字体都配置了 CDN.
 
 ## 添加文章修改时间
-book 中同样也有修改时间的原生支持, 但是需要与 GitHub 仓库进行集成, 这是一个比较苛刻的条件, 我无法做到, 因此我将手动实现一个放置在左下角的文章修改时间.
+Book 中同样也有修改时间的原生支持, 但是需要与 GitHub 仓库进行集成, 这是一个比较苛刻的条件, 我无法做到, 因此我将手动实现一个放置在左下角的文章修改时间.
 如果你对 book 中提供的修改时间显示有兴趣, 可以去看 [站点配置](https://github.com/alex-shpak/hugo-book?tab=readme-ov-file#site-configuration) 中 `enableGitInfo` 与 `BookLastChangeLink` 两个字段.
 只有这两者都被正确配置, 时间显示才会开启.
 
@@ -197,10 +197,12 @@ book 主题中提供的注入点可以在 GitHub [自述文件](https://github.c
 
 ## 主页面
 访问网址时进入的页面为主页面, 默认情况下主页面是空的, 你可以在 `content` 目录中新建一个 `content/_index.md` 来定制你主页面的内容.
+
+### 标签分类
 我希望在主页中呈现一个导航菜单, 按文章 tag 分类.
 要做到这一点, 让 hugo 自行渲染是最方便的, 免于我们手动编写代码.
 
-book 主题中自带了一个导航页, 但是隐藏得比较深.
+Book 主题中自带了一个导航页, 但是隐藏得比较深.
 这一部分页面编写在 book 仓库的 `layouts/_partials/docs/taxonomy.html` 中, 我们直接调用这一部分代码即可.
 我将使用 hugo 提供的 *Shortcode* 机制, 它能让我们在 Markdown 中引入 HTML 或其他逻辑.
 
@@ -210,6 +212,94 @@ book 主题中自带了一个导航页, 但是隐藏得比较深.
 {{ partial "docs/taxonomy" .Page }}
 ```
 这样你就可以在 Markdown 中使用 `{{< book-taxonomy >}}` 来渲染一个按 tag 分类的导航页.
+
+### 最近修改与精选文章
+为了让读者找到最有价值的内容, 以及隔一段时间后快速了解有何更新, 我想在主页加入一些文章链接指向我认为较好的精选文章, 以及一个按修改时间排序的文章列表.
+
+我将在有价值的文章元数据区添加一个 `marked` 字段, 凡是这一字段被标为 `true` 的将会进入我们的精选文章列表;
+列表按文章创建时间排序, 最新的在最前面.
+要做到这一点, 编写一个 Shortcode:
+```html
+<!-- layouts/shortcodes/marked-list.html -->
+{{ $limit := 10 }}
+{{ with .Get "limit" }}{{ $limit = int . }}{{ end }}
+
+{{ $dateFormat := default "January 2, 2006" $.Site.Params.BookDateFormat }}
+
+{{ $matches := slice }}
+{{ range .Site.RegularPages }}
+  {{ $m := .Params.marked }}
+  {{ if $m }}
+    {{ $matches = $matches | append . }}
+  {{ end }}
+{{ end }}
+
+{{ $matches = sort $matches "Date" "desc" }}
+{{ $items := slice }}
+{{ if eq $limit 0 }}
+  {{ $items = $matches}}
+{{ else }}
+  {{ $items = first $limit $matches }}
+{{ end }}
+
+{{ if gt (len $items) 0 }}
+<ul class="marked-list">
+  {{ range $items }}
+    <li>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <small class="muted"> — {{ .Lastmod.Format $dateFormat }}</small>
+    </li>
+  {{ end }}
+</ul>
+{{ else }}
+<p class="marked-list-empty">暂无已标记的文章.</p>
+{{ end }}
+```
+如此一来可以通过 `{{< marked-list >}}` 来使用, 默认展示 10 篇文章, 可以通过 `{{< marked-list limit="15" >}}` 来修改文章数, 0 表示不限数量.
+
+类似地可以编写一个渲染按修改时间排序的文章列表的 Shortcode:
+```html
+<!-- layouts/shortcodes/recent-mod-list.html -->
+{{ $limit := 10 }}
+{{ with .Get "limit" }}{{ $limit = int . }}{{ end }}
+
+{{ $dateFormat := default "January 2, 2006" $.Site.Params.BookDateFormat }}
+
+{{ $matches := .Site.RegularPages }}
+{{ $matches = sort $matches "Lastmod" "desc" }}
+{{ $items := first $limit $matches }}
+
+<ul class="marked-list">
+  {{ range $items }}
+    <li>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <small class="muted"> — {{ .Lastmod.Format $dateFormat }}</small>
+    </li>
+  {{ end }}
+</ul>
+```
+通过 `{{< recent-mod-list >}}` 使用, 同样默认展示 10 篇文章, 可以通过 `{{< recent-mod-list limit="15" >}}` 来修改文章数.
+它必须设置显示文章数.
+
+Book 主题还提供了一些有用的预定义 Shortcode, 例如 `{{< columns >}}` 可以设置多栏布局, 按如下方式使用:
+```
+{{< columns >}}
+- col 1
+- col 2
+- ...
+{{< /columns >}}
+```
+有几个一级列表, 就会渲染几栏.
+如果需要分栏显示列表内容, 内容可能会与上述语法混淆导致渲染错误, 此时可以使用已经被废弃的语法
+```
+{{< columns >}}
+left...
+<--->
+...right
+{{< /columns >}}
+```
+这样可以保证不会与内容相互干扰.
+但因为已经弃用, 不能确定后续受支持情况.
 
 ## 最终配置文件
 最终使用的 `hugo.toml` 配置文件如下所示
