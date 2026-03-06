@@ -73,6 +73,16 @@ delimiters = { block = [['$$', '$$']], inline = [['\(', '\)']] }
 另外, 还有一些补全 Goldmark 漏洞的规则, 例如 `$$...$$` 会被识别为行间公式, 于是我们在编写 pandoc 过滤器时将内联代码块内的双美元符号 `$$` 进行转义 `\$\$`;
 内联代码块中如果出现这种模式 `\\$` 就会被识别为一个转义的反斜杠与一个美元符号 `\$`, 因此干脆将所有的 `\` 都转义.
 
+另外, 引用块内的多行公式块会因为同样的原因导致渲染后每行开头多出一个 `>`, 例如
+```
+> $$\begin{align}
+> ...
+> \end{align}$$
+```
+就会导致问题.
+解决的方法之一是删除引用块中公式块的所有换行, 将其压为一行, 自然就不会有这种问题了.
+同样编写一个 pandoc 过滤器来做到这一点.
+
 下面是能够达成我们目标的 lua 过滤器, 用于被 pandoc 使用
 ```lua
 -- delimiter.lua
@@ -94,6 +104,25 @@ function Code(el)
   s = s:gsub("%$%$", "\\$\\$")
   el.text = s
   return el
+end
+
+
+local function flatten_math(el)
+  if el.t == "Math" and el.text then
+    if string.find(el.text, "[\r\n]") then
+      local s = el.text:gsub("[\r\n]+", " ")
+      s = s:gsub("%s+", " ")
+      s = s:gsub("^%s+", ""):gsub("%s+$", "")
+      el.text = s
+      return el
+    end
+  end
+end
+
+function BlockQuote(el)
+  return pandoc.walk_block(el, {
+    Math = flatten_math
+  })
 end
 ```
 
