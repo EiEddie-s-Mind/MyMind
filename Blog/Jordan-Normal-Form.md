@@ -4,7 +4,7 @@ tags:
   - undone
   - todo
 date: 2025-12-05
-lastmod: 2026-03-06
+lastmod: 2026-03-10
 marked: true
 title: 若尔当标准型
 aliases: [若尔当标准型]
@@ -43,7 +43,7 @@ aliases: [若尔当标准型]
 > *证明*:
 > 对于任意 $\mathbf{v} \in \ker A^k$, 有 $A^k \, \mathbf{v} = 0$.
 > 因此 $A^{k+1} \, \mathbf{v} = A (A^k \, \mathbf{v}) = 0$, 于是 $\ker A^k \subseteq \ker A^{k+1}$.
-> *证毕*.
+> $\blacksquare$
 
 > 若存在 $m$ 使 $\ker A^m = \ker A^{m+1}$, 则
 > $$\ker A^m = \ker A^{m+1} = \ker A^{m+2} = \cdots$$
@@ -56,7 +56,7 @@ aliases: [若尔当标准型]
 > 所以 $A^m (A^k \, \mathbf{v}) = A^{m+k} \, \mathbf{v} = 0$,
 > $\mathbf{v} \in \ker A^{m+k}$.
 > 于是我们得到 $\ker A^{m+k+1} \subseteq \ker A^{m+k}$.
-> *证毕*.
+> $\blacksquare$
 
 由这一引理可知, 存在一个最小的 $m$, 使幂次小于 $m$ 时都为真子集, 而大于等于 $m$ 时都相等, 即 $\ker A^0 \subsetneq \ker A^1 \subsetneq \cdots \subsetneq \ker A^m = \ker A^{m+1} = \cdots$.
 可以证明, $m \le \dim V$.
@@ -71,7 +71,7 @@ aliases: [若尔当标准型]
 > 由定义可知任意 $\mathbf{v} \in \ker (A - \lambda I)^{\dim V}$ 都有 $\mathbf{v} \in G(\lambda)$, 所以 $\ker (A - \lambda I)^{\dim V} \subset G(\lambda)$;
 > 反过来, 对于任何 $\mathbf{v} \in G(\lambda)$, $\mathbf{v} \in \ker (A - \lambda I)^j \subset \ker (A - \lambda I)^{\dim V}$.
 > 综上得证.
-> *证毕*.
+> $\blacksquare$
 
 这一空间是 $A$- 不变的, 这使它很有价值.
 为了证明这一点, 需要下面的引理:
@@ -84,7 +84,7 @@ aliases: [若尔当标准型]
 > 所以 $f(A) (A \mathbf{v}) = A (f(A) \, \mathbf{v}) = 0$,
 > 所以 $A \mathbf{v} \in \ker f(A)$,
 > 即 $\ker f(A)$ 是 $A$- 不变的.
-> *证毕*.
+> $\blacksquare$
 
 于是我们得到结论:
 
@@ -94,7 +94,7 @@ aliases: [若尔当标准型]
 > \
 > *证明*:
 > 令 $f(x) = (x - \lambda)^{\dim V}$, 由引理显然成立.
-> *证毕*.
+> $\blacksquare$
 
 接下来我们将得到第一个有价值的成果, 在此之前, 请看这样一个引理:
 
@@ -113,11 +113,12 @@ aliases: [若尔当标准型]
 > 现在我们知道 $\ker A^n + \text{im} \, A^n$ 是一个直和,
 > 此外 $\dim \, (\ker A^n \oplus \text{im} \, A^n) = \dim \ker A^n + \dim \text{im} \, A^n = \dim V$.
 > 由此可知 $V = \ker A^{\dim V} \oplus \text{im} \, A^{\dim V}$.
-> *证毕*.
+> $\blacksquare$
 
 现在可以证明:
 
 > [!note]
+> \[**准素分解**\]:
 > $$V = G(\lambda_1) \oplus G(\lambda_2) \oplus \cdots \oplus G(\lambda_n)$$
 > \
 > *证明*:
@@ -146,7 +147,7 @@ aliases: [若尔当标准型]
 > 每个 $\mathbf{v}_j$, $j = 2, 3, ..., n$ 都在 $G'(\lambda_j)$ 中.
 > 因为相应于不同特征值的广义特征向量线性无关, 因此除 $j = i$ 之外每个 $\mathbf{v}_j$ 都为 $0$.
 > 特别地, $\mathbf{v}_1 = 0$, 所以 $\mathbf{v} = \mathbf{u} \in U$.
-> *证毕*.
+> $\blacksquare$
 
 这样一来, 我们就将 $V$ 拆分为了广义特征空间 $G(\lambda)$ 的直和, 这些空间 $G(\lambda)$ 的个数为特征值的数量 $n$, 这是显然的.
 *请注意, $n$ 并非指 $\dim V$*.
@@ -163,7 +164,7 @@ $G(\lambda)$ 的维度定义为 $\lambda$ 的 (代数) **重数**,
 > \
 > *证明*:
 > 由 $G(\lambda) = \ker (A - \lambda I)^{\dim V}$ 显然成立.
-> *证毕*.
+> $\blacksquare$
 
 在不引起混淆的情况下, 我将使用符号 $G$ 代表广义特征空间 $G(\lambda)$;
 $N := A - \lambda I$.
@@ -188,13 +189,12 @@ $N := A - \lambda I$.
 > 类似考虑两边在 $N^{m-2}$ 下的像, 可以得到 $k_1 = 0$.
 > 依次下去, 可得 $k_0 = k_1 = \cdots = k_{m-1} = 0$,
 > 这样就证明了向量组线性无关.
-> *证毕*.
+> $\blacksquare$
 
 考虑由上述向量组张成的空间 $C = \langle \mathbf{v}, N \mathbf{v}, ..., N^{m-1} \, \mathbf{v} \rangle$, 显然它是 $N$ 的不变子空间.
 $C$ 被称为 $N$ 的**循环子空间**.
 
 下面我们将逐渐证明, 任意 $G$ 都能分解为一系列循环子空间 $C$ 的直和.
-在此之前, 来看这两个定理
 
 > 若 $V = U \oplus W$, 则商映射 $\pi: V \rightarrow V/U$ 在 $W$ 上的限制 $\pi|_W: W \rightarrow V/U$ 是双射.
 > 
@@ -208,8 +208,9 @@ $C$ 被称为 $N$ 的**循环子空间**.
 > 对于任意 $\mathbf{v} \in V$ 有 $\mathbf{v} = \mathbf{u} + \mathbf{w}$, 其中 $\mathbf{u} \in U$, $\mathbf{w} \in W$.
 > $\pi(\mathbf{v}) = \pi(\mathbf{u}) + \pi(\mathbf{w}) = 0 + \pi(\mathbf{w})$.
 > 所以 $\forall ~ [\mathbf{v}] \in V/U$, $[\mathbf{v}] = \pi(\mathbf{v}) = \pi(\mathbf{w})$.
-> *证毕*.
+> $\blacksquare$
 
+<!-- 定理与证明有误 -->
 > 在 $G$ 中 $C$ 有一个补空间 $C'$ 也是 $N$ 的不变子空间.
 > 
 > \
@@ -235,7 +236,7 @@ $C$ 被称为 $N$ 的**循环子空间**.
 > 所以 $C'$ 可以分解为一系列 $N$- 不变子空间的直和
 > $$C' = U_2 \oplus U_3 \oplus \cdots \oplus U_s$$
 > 如此命题得证.
-> *证毕*.
+> $\blacksquare$
 
 从证明过程中, 我们可以知道:
 
@@ -243,4 +244,11 @@ $C$ 被称为 $N$ 的**循环子空间**.
 > $G$ 可以分解为循环子空间的直和
 > $$G = C_1 \oplus C_2 \oplus \cdots \oplus C_s$$
 
-接下来计算分解出循环子空间的数量, 以及每个空间的维度.
+接下来计算分解出的循环子空间的数量, 以及每个空间的维度.
+
+---
+
+## 参考
+1. S. Axler. "复向量空间上的算子." 于 *线性代数应该这样学*, pp. 183-206. 人民邮电出版社, 2016.
+2. 丘维生. *高等代数 (下册)*. 清华大学出版社, 2010.
+3. \@纯粹. "[Jordan标准型：根子空间+准素分解，幂零变换+循环分解，Weyr特征，A与A^T相似](https://zhuanlan.zhihu.com/p/75745789)". 知乎, 2020.
